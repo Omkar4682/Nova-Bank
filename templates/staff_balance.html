@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Customer Balances</div>
+    <div class="page-subheading">Search and view any customer's account balance</div>
+
+    <!-- SEARCH FORM -->
+    <div class="bank-card" style="max-width:480px;margin-bottom:20px;">
+        <form method="GET" style="display:flex;gap:10px;">
+            <input class="bank-form-control" name="accno" placeholder="Search by account number"
+                   value="{{ accno }}" style="margin-bottom:0;flex:1;">
+            <button class="btn-bank-primary" style="white-space:nowrap;">Search</button>
+            {% if accno %}
+            <a href="{% url 'balance' %}" class="btn-bank-secondary" style="white-space:nowrap;text-decoration:none;padding:8px 14px;">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="bank-card">
+        <div class="bank-card-title">
+            {% if accno %}Search Results{% else %}All Accounts{% endif %}
+        </div>
+
+        <table class="bank-table">
+            <tr>
+                <th>Account No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Balance</th>
+                <th>Status</th>
+            </tr>
+
+            {% for acc in accounts %}
+            <tr>
+                <td style="font-family:monospace;">{{ acc.accno }}</td>
+                <td>{{ acc.cname }}</td>
+                <td>{{ acc.email }}</td>
+                <td><strong>₹ {{ acc.balance }}</strong></td>
+                <td>
+                    {% if acc.status == 'ACTIVE' %}
+                        <span style="color:green;">● Active</span>
+                    {% elif acc.status == 'PENDING' %}
+                        <span style="color:orange;">● Pending</span>
+                    {% else %}
+                        <span style="color:red;">● {{ acc.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;padding:20px;color:#888;">
+                    No accounts found.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

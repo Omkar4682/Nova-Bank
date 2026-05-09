@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Staff Dashboard</div>
+    <div class="page-subheading">Welcome, {{ request.user.username }} — Staff Panel</div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-grid">
+
+        <div class="stat-card">
+            <div class="stat-label">Pending Approvals</div>
+            <div class="stat-value" style="color:orange;">{{ pending_accounts.count }}</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="stat-label">Active Accounts</div>
+            <div class="stat-value">{{ active_accounts }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Total Customers</div>
+            <div class="stat-value">{{ total_customers }}</div>
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="bank-card">
+        <div class="bank-card-title">⚡ Quick Actions</div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="{% url 'approve_accounts' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;">
+                ✅ Approve Accounts
+            </a>
+            <a href="{% url 'staff_create_customer' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;background:#185FA5;">
+                ➕ Create Customer
+            </a>
+            <a href="{% url 'transaction' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;background:#1a7a3f;">
+                💳 Deposit / Withdraw
+            </a>
+            <a href="{% url 'transfer' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;background:#7a3f1a;">
+                ⇄ Transfer Money
+            </a>
+            <a href="{% url 'balance' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;background:#555;">
+                💰 Check Balance
+            </a>
+            <a href="{% url 'history' %}" class="btn-bank-primary" style="text-decoration:none;padding:10px 18px;background:#333;">
+                📋 Transaction History
+            </a>
+        </div>
+    </div>
+
+    <!-- PENDING ACCOUNTS PREVIEW -->
+    {% if pending_accounts %}
+    <div class="bank-card">
+        <div class="bank-card-title">⏳ Pending Account Approvals</div>
+
+        <table class="bank-table">
+            <tr>
+                <th>Account No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered</th>
+                <th>Action</th>
+            </tr>
+
+            {% for acc in pending_accounts %}
+            <tr>
+                <td>{{ acc.accno }}</td>
+                <td>{{ acc.cname }}</td>
+                <td>{{ acc.email }}</td>
+                <td style="font-size:12px;color:#888;">{{ acc.created_at|date:"d M Y" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'approve_accounts' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accno" value="{{ acc.accno }}">
+                        <input type="hidden" name="action" value="approve">
+                        <button class="btn-bank-primary" style="padding:5px 12px;font-size:12px;">Approve</button>
+                    </form>
+                    <form method="POST" action="{% url 'approve_accounts' %}" style="display:inline;margin-left:5px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accno" value="{{ acc.accno }}">
+                        <input type="hidden" name="action" value="reject">
+                        <button class="btn-bank-secondary" style="padding:5px 12px;font-size:12px;background:#fee;border-color:red;color:red;">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div style="text-align:right;margin-top:10px;">
+            <a href="{% url 'approve_accounts' %}" style="font-size:13px;color:#185FA5;">View all pending →</a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

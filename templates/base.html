@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Banking System</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+<nav class="bank-navbar">
+
+    <div class="bank-logo">
+        <div class="bank-logo-icon">🏦</div>
+        <div>
+            <div class="bank-logo-text">Nova Banking</div>
+            <div class="bank-logo-sub">
+                {% if request.user.is_staff %}Staff Portal{% else %}Customer Portal{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav-links">
+
+        {% if request.user.is_staff %}
+            <!-- STAFF NAV LINKS -->
+            <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'approve_accounts' %}">Approvals</a></li>
+            <li><a href="{% url 'staff_create_customer' %}">Create Customer</a></li>
+            <li><a href="{% url 'transaction' %}">Transaction</a></li>
+            <li><a href="{% url 'transfer' %}">Transfer</a></li>
+            <li><a href="{% url 'balance' %}">Balance</a></li>
+            <li><a href="{% url 'history' %}">History</a></li>
+        {% else %}
+            <!-- CUSTOMER NAV LINKS (read-only) -->
+            <li><a href="{% url 'customer_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'balance' %}">Balance</a></li>
+            <li><a href="{% url 'history' %}">History</a></li>
+        {% endif %}
+
+    </ul>
+
+    <div class="nav-right">
+        <div class="user-badge">
+            <div class="user-avatar">
+                {{ request.user.username|slice:":1"|upper }}
+            </div>
+            <span class="user-name">{{ request.user.username }}</span>
+        </div>
+        <a href="{% url 'logout' %}" class="btn-bank-secondary">Logout</a>
+    </div>
+
+</nav>
+
+{% block content %}
+{% endblock %}
+
+<div class="bank-footer">
+    © 2026 Nova Banking System
+</div>
+
+</body>
+</html>

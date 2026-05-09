@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Transaction History</div>
+    <div class="page-subheading">Search customer's transaction history</div>
+
+    <!-- SEARCH FORM -->
+    <div class="bank-card" style="max-width:480px;margin-bottom:20px;">
+        <form method="GET" style="display:flex;gap:10px;">
+            <input class="bank-form-control" name="accno" placeholder="Enter account number to search"
+                   value="{{ accno }}" style="margin-bottom:0;flex:1;" required>
+            <button class="btn-bank-primary" style="white-space:nowrap;">Search</button>
+            {% if accno %}
+            <a href="{% url 'history' %}" class="btn-bank-secondary" style="white-space:nowrap;text-decoration:none;padding:8px 14px;">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if error %}
+    <div class="bank-alert-danger" style="max-width:480px;">⚠ {{ error }}</div>
+    {% endif %}
+
+    {% if account %}
+    <!-- ACCOUNT SUMMARY -->
+    <div class="bank-card" style="margin-bottom:15px;padding:12px 20px;display:flex;gap:30px;align-items:center;">
+        <div>
+            <div style="font-size:11px;color:#888;">ACCOUNT</div>
+            <div style="font-family:monospace;font-weight:600;">{{ account.accno }}</div>
+        </div>
+        <div>
+            <div style="font-size:11px;color:#888;">HOLDER</div>
+            <div style="font-weight:600;">{{ account.cname }}</div>
+        </div>
+        <div>
+            <div style="font-size:11px;color:#888;">BALANCE</div>
+            <div style="font-weight:600;color:#0C447C;">₹ {{ account.balance }}</div>
+        </div>
+        <div>
+            <div style="font-size:11px;color:#888;">STATUS</div>
+            <div style="font-weight:600;">{{ account.status }}</div>
+        </div>
+    </div>
+
+    <div class="bank-card">
+        <div class="bank-card-title">Transactions ({{ transactions.count }})</div>
+
+        <table class="bank-table">
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Performed By</th>
+                <th>Status</th>
+                <th>Date & Time</th>
+            </tr>
+
+            {% for t in transactions %}
+            <tr>
+                <td>
+                    {% if t.transaction_type == 'DEPOSIT' %}
+                        <span style="color:green;">▲ Deposit</span>
+                    {% elif t.transaction_type == 'WITHDRAW' %}
+                        <span style="color:red;">▼ Withdraw</span>
+                    {% else %}
+                        <span style="color:#0C447C;">⇄ Transfer</span>
+                    {% endif %}
+                </td>
+                <td><strong>₹ {{ t.amount }}</strong></td>
+                <td style="font-size:12px;">{{ t.performed_by.username|default:"—" }}</td>
+                <td>
+                    <span style="color:{% if t.status == 'SUCCESS' %}green{% else %}red{% endif %};">
+                        {{ t.status }}
+                    </span>
+                </td>
+                <td style="font-size:12px;color:#888;">{{ t.timestamp|date:"d M Y, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;padding:20px;color:#888;">
+                    No transactions for this account.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    {% elif accno and not error %}
+    <div class="bank-alert-info" style="max-width:480px;">Enter an account number above to view transactions.</div>
+    {% else %}
+    <div class="bank-card" style="max-width:480px;text-align:center;padding:30px;color:#888;">
+        Enter an account number above to search transactions.
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

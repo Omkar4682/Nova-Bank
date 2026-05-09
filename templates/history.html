@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Transaction History</div>
+    <div class="page-subheading">All transactions on your account</div>
+
+    {% if account %}
+    <div class="bank-card" style="margin-bottom:15px;padding:12px 20px;display:flex;gap:30px;align-items:center;">
+        <div>
+            <div style="font-size:11px;color:#888;">ACCOUNT</div>
+            <div style="font-family:monospace;font-weight:600;">{{ account.accno }}</div>
+        </div>
+        <div>
+            <div style="font-size:11px;color:#888;">HOLDER</div>
+            <div style="font-weight:600;">{{ account.cname }}</div>
+        </div>
+        <div>
+            <div style="font-size:11px;color:#888;">BALANCE</div>
+            <div style="font-weight:600;color:#0C447C;">₹ {{ account.balance }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="bank-card">
+        <table class="bank-table">
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date & Time</th>
+            </tr>
+
+            {% for t in transactions %}
+            <tr>
+                <td>
+                    {% if t.transaction_type == 'DEPOSIT' %}
+                        <span style="color:green;">▲ Deposit</span>
+                    {% elif t.transaction_type == 'WITHDRAW' %}
+                        <span style="color:red;">▼ Withdraw</span>
+                    {% else %}
+                        <span style="color:#0C447C;">⇄ Transfer</span>
+                    {% endif %}
+                </td>
+                <td><strong>₹ {{ t.amount }}</strong></td>
+                <td>
+                    <span style="color:{% if t.status == 'SUCCESS' %}green{% else %}red{% endif %};">
+                        {{ t.status }}
+                    </span>
+                </td>
+                <td style="font-size:12px;color:#888;">{{ t.timestamp|date:"d M Y, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;padding:30px;color:#888;">
+                    No transactions found.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

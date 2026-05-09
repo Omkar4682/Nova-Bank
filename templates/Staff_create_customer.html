@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{%load static%}
+<link rel="stylesheet" href="{%static 'style.css'%}">
+<div class="page-wrapper"  >
+
+    <div class="page-heading">Create New Customer</div>
+    <div class="page-subheading">Register a new customer directly. Their account will be auto-approved.</div>
+
+    <div class="bank-card" style="max-width:540px;">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Username</label>
+            <input class="bank-form-control" name="username" placeholder="e.g.Omkar Date " required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Email</label>
+            <input class="bank-form-control" type="email" name="email" placeholder="email@example.com" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Password</label>
+            <input class="bank-form-control" type="password" name="password" placeholder="Set a password" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Mobile Number</label>
+            <input class="bank-form-control" name="mobile" placeholder="10-digit mobile number" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Address</label>
+            <textarea class="bank-form-control" name="address" placeholder="Full address" rows="2"></textarea>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Aadhaar Number</label>
+            <input class="bank-form-control" name="aadhaar" placeholder="12-digit Aadhaar" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">PAN Number</label>
+            <input class="bank-form-control" name="pan" placeholder="e.g. ABCDE1234F" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Profile Photo (optional)</label>
+            <input class="bank-form-control" type="file" name="photo" accept="image/*">
+
+            <div style="display:flex;gap:10px;margin-top:10px;">
+                <button class="btn-bank-primary" style="flex:1;">Create & Activate Account</button>
+                <a href="{% url 'staff_dashboard' %}" class="btn-bank-secondary" style="flex:1;text-align:center;text-decoration:none;padding:8px;">Cancel</a>
+            </div>
+
+        </form>
+
+        {% if form.errors %}
+        <div class="bank-alert-danger" style="margin-top:15px;">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <div>⚠ {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

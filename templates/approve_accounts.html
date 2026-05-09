@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Pending Account Approvals</div>
+    <div class="page-subheading">Review and approve or reject new customer accounts</div>
+
+    <div class="bank-card">
+
+        <table class="bank-table">
+            <tr>
+                <th>Account No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered On</th>
+                <th>Action</th>
+            </tr>
+
+            {% for acc in accounts %}
+            <tr>
+                <td style="font-family:monospace;">{{ acc.accno }}</td>
+                <td>{{ acc.cname }}</td>
+                <td>{{ acc.email }}</td>
+                <td style="font-size:12px;color:#888;">{{ acc.created_at|date:"d M Y, H:i" }}</td>
+                <td>
+                    <!-- APPROVE -->
+                    <form method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accno" value="{{ acc.accno }}">
+                        <input type="hidden" name="action" value="approve">
+                        <button class="btn-bank-primary" style="padding:6px 14px;font-size:12px;">
+                            ✅ Approve
+                        </button>
+                    </form>
+
+                    <!-- REJECT -->
+                    <form method="POST" style="display:inline;margin-left:6px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="accno" value="{{ acc.accno }}">
+                        <input type="hidden" name="action" value="reject">
+                        <button class="btn-bank-secondary" style="padding:6px 14px;font-size:12px;background:#fee;border-color:#c0392b;color:#c0392b;">
+                            ❌ Reject
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;padding:30px;color:#888;">
+                    🎉 No pending accounts. All accounts are reviewed!
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

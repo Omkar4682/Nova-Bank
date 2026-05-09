@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-heading">Dashboard</div>
+<div class="page-subheading">Welcome back, {{ request.user.username }}</div>
+
+<div class="stat-grid">
+
+    <div class="stat-card">
+        <div class="stat-label">Account Number</div>
+        <div class="stat-value">{{ account.accno }}</div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-label">Balance</div>
+        <div class="stat-value">₹{{ account.balance }}</div>
+    </div>
+
+</div>
+
+<div class="bank-card">
+    <div class="bank-card-title">Recent Transactions</div>
+
+    <table class="bank-table">
+        <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+
+        {% for t in transactions %}
+        <tr>
+            <td>{{ t.transaction_type }}</td>
+            <td>₹{{ t.amount }}</td>
+            <td>{{ t.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

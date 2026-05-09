@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Transfer Money</div>
+    <div class="page-subheading">Transfer funds between two customer accounts</div>
+
+    <div class="bank-card" style="max-width:480px;">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Sender Account Number</label>
+            <input class="bank-form-control" name="sender" placeholder="12-digit sender account" maxlength="12" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Receiver Account Number</label>
+            <input class="bank-form-control" name="receiver" placeholder="12-digit receiver account" maxlength="12" required>
+
+            <label style="font-size:12px;color:#555;font-weight:600;">Amount (₹)</label>
+            <input class="bank-form-control" type="number" name="amount" placeholder="Enter amount" min="1" step="0.01" required>
+
+            <button class="btn-bank-primary" style="margin-top:5px;">Transfer</button>
+        </form>
+
+        {% if success %}
+        <div class="bank-alert-info" style="margin-top:15px;">✅ {{ success }}</div>
+        {% endif %}
+
+        {% if error %}
+        <div class="bank-alert-danger" style="margin-top:15px;">⚠ {{ error }}</div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login — Nova Banking</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <div style="text-align:center;font-size:36px;margin-bottom:8px;">🏦</div>
+        <div class="auth-title">Nova Banking System</div>
+        <div class="auth-subtitle">Sign in to your account</div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input class="bank-form-control" name="username" placeholder="Username" required autofocus>
+            <input class="bank-form-control" type="password" name="password" placeholder="Password" required>
+            <button class="btn-bank-primary" style="margin-top:5px;">Login</button>
+        </form>
+
+        <div class="auth-link">
+            New customer?
+            <a href="{% url 'register' %}">Open an account</a>
+        </div>
+
+        {% if error %}
+        <div class="bank-alert-danger" style="margin-top:12px;">{{ error }}</div>
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

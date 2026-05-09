@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <div class="page-heading">Welcome, {{ request.user.username }} 👋</div>
+    <div class="page-subheading">Here's your account overview</div>
+
+    <!-- ACCOUNT STATUS ALERT -->
+    {% if account and account.status == 'PENDING' %}
+    <div class="bank-alert-info" style="margin-bottom:20px;">
+        ⏳ Your account is <strong>pending approval</strong> by staff. You'll be able to transact once activated.
+    </div>
+    {% endif %}
+
+    {% if account and account.status == 'BLOCKED' or account and account.status == 'REJECTED' %}
+    <div class="bank-alert-danger" style="margin-bottom:20px;">
+        ⚠ Your account has been <strong>{{ account.status }}</strong>. Please contact the bank.
+    </div>
+    {% endif %}
+
+    <!-- STAT CARDS -->
+    <div class="stat-grid">
+
+        <div class="stat-card">
+            <div class="stat-label">Account Number</div>
+            <div class="stat-value" style="font-size:16px;letter-spacing:2px;">
+                {% if account %}{{ account.accno }}{% else %}—{% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="stat-label">Available Balance</div>
+            <div class="stat-value">
+                ₹ {% if account %}{{ account.balance }}{% else %}0.00{% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Account Status</div>
+            <div class="stat-value" style="font-size:14px;">
+                {% if account %}
+                    {% if account.status == 'ACTIVE' %}
+                        <span style="color:green;">● Active</span>
+                    {% elif account.status == 'PENDING' %}
+                        <span style="color:orange;">● Pending</span>
+                    {% else %}
+                        <span style="color:red;">● {{ account.status }}</span>
+                    {% endif %}
+                {% else %}
+                    No Account
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- PROFILE CARD -->
+        <div class="bank-card">
+            <div class="bank-card-title">👤 My Profile</div>
+
+            {% if profile %}
+            <table style="width:100%;font-size:13px;">
+                <tr>
+                    <td style="color:#888;padding:6px 0;width:40%;">Username</td>
+                    <td><strong>{{ request.user.username }}</strong></td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">Email</td>
+                    <td>{{ request.user.email }}</td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">Mobile</td>
+                    <td>{{ profile.mobile }}</td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">PAN</td>
+                    <td>{{ profile.pan }}</td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">Aadhaar</td>
+                    <td>{{ profile.aadhaar|slice:":4" }}XXXX{{ profile.aadhaar|slice:"8:" }}</td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">Address</td>
+                    <td>{{ profile.address }}</td>
+                </tr>
+                <tr>
+                    <td style="color:#888;padding:6px 0;">KYC</td>
+                    <td>
+                        {% if profile.is_kyc_verified %}
+                            <span style="color:green;">✔ Verified</span>
+                        {% else %}
+                            <span style="color:orange;">⏳ Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            {% else %}
+            <p style="color:#888;font-size:13px;">Profile not found.</p>
+            {% endif %}
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="bank-card">
+            <div class="bank-card-title">⚡ Quick Actions</div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:5px;">
+                <a href="{% url 'balance' %}" class="btn-bank-primary" style="text-align:center;text-decoration:none;padding:10px;">
+                    💰 View Balance
+                </a>
+                <a href="{% url 'transaction_history' %}" class="btn-bank-primary" style="text-align:center;text-decoration:none;padding:10px;background:#185FA5;">
+                    📋 Transaction History
+                </a>
+            </div>
+
+            <div style="margin-top:20px;padding:12px;background:#f0f7ff;border-radius:6px;font-size:12px;color:#555;">
+                <strong>Note:</strong> For deposits, withdrawals, or transfers, please visit the bank branch or contact staff.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RECENT TRANSACTIONS -->
+    <div class="bank-card" style="margin-top:20px;">
+        <div class="bank-card-title">🕒 Recent Transactions</div>
+
+        <table class="bank-table">
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date & Time</th>
+            </tr>
+
+            {% for t in transactions %}
+            <tr>
+                <td>
+                    {% if t.transaction_type == 'DEPOSIT' %}
+                        <span style="color:green;">▲ Deposit</span>
+                    {% elif t.transaction_type == 'WITHDRAW' %}
+                        <span style="color:red;">▼ Withdraw</span>
+                    {% else %}
+                        <span style="color:#0C447C;">⇄ Transfer</span>
+                    {% endif %}
+                </td>
+                <td><strong>₹ {{ t.amount }}</strong></td>
+                <td>
+                    <span style="color:{% if t.status == 'SUCCESS' %}green{% else %}red{% endif %};">
+                        {{ t.status }}
+                    </span>
+                </td>
+                <td style="font-size:12px;color:#888;">{{ t.timestamp|date:"d M Y, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;color:#888;padding:20px;">
+                    No transactions yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if transactions %}
+        <div style="text-align:right;margin-top:10px;">
+            <a href="{% url 'transaction_history' %}" style="font-size:13px;color:#185FA5;">View all transactions →</a>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
