@@ -9,14 +9,8 @@ from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from functools import wraps
-
 from .models import Account, Transaction, CustomerProfile
 from .forms import RegisterForm, TransactionForm, TransferForm
-
-
-# -------------------------------------------------------
-# DECORATORS
-# -------------------------------------------------------
 
 def staff_required(view_func):
     """Allows only staff (is_staff=True) users."""
@@ -41,10 +35,6 @@ def customer_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-
-# -------------------------------------------------------
-# REGISTER (Public — anyone can register as a customer)
-# -------------------------------------------------------
 class RegisterView(View):
 
     def get(self, request):
@@ -80,10 +70,6 @@ class RegisterView(View):
 
         return render(request, "register.html", {"form": form})
 
-
-# -------------------------------------------------------
-# LOGIN — one page for all roles
-# -------------------------------------------------------
 class LoginView(View):
 
     def get(self, request):
@@ -111,18 +97,10 @@ class LoginView(View):
         else:
             return redirect('customer_dashboard')
 
-
-# -------------------------------------------------------
-# LOGOUT
-# -------------------------------------------------------
 def logout_view(request):
     logout(request)
     return redirect('login')
 
-
-# -------------------------------------------------------
-# CUSTOMER DASHBOARD (read-only: profile + balance + history)
-# -------------------------------------------------------
 @method_decorator([login_required, customer_required], name='dispatch')
 class CustomerDashboardView(View):
 
@@ -144,10 +122,6 @@ class CustomerDashboardView(View):
             "profile": profile,
         })
 
-
-# -------------------------------------------------------
-# STAFF DASHBOARD
-# -------------------------------------------------------
 @method_decorator([login_required, staff_required], name='dispatch')
 class StaffDashboardView(View):
 
@@ -162,10 +136,6 @@ class StaffDashboardView(View):
             "active_accounts": active_accounts,
         })
 
-
-# -------------------------------------------------------
-# APPROVE / REJECT ACCOUNTS (Staff only)
-# -------------------------------------------------------
 @method_decorator([login_required, staff_required], name='dispatch')
 class ApproveAccountView(View):
 
@@ -186,7 +156,6 @@ class ApproveAccountView(View):
                 account.approved_at = timezone.now()
                 account.save()
             elif action == 'reject':
-    # Delete account, profile, and user completely
                 user = account.user
                 account.delete()
                 CustomerProfile.objects.filter(user=user).delete()
@@ -197,10 +166,6 @@ class ApproveAccountView(View):
 
         return redirect('approve_accounts')
 
-
-# -------------------------------------------------------
-# STAFF: CREATE CUSTOMER
-# -------------------------------------------------------
 @method_decorator([login_required, staff_required], name='dispatch')
 class StaffCreateCustomerView(View):
 
@@ -225,8 +190,6 @@ class StaffCreateCustomerView(View):
                 pan=form.cleaned_data['pan'],
                 photo=form.cleaned_data.get('photo')
             )
-
-            # Staff-created accounts are auto-approved
             Account.objects.create(
                 user=user,
                 cname=user.username,
@@ -240,10 +203,6 @@ class StaffCreateCustomerView(View):
 
         return render(request, "staff_create_customer.html", {"form": form})
 
-
-# -------------------------------------------------------
-# TRANSACTION: DEPOSIT / WITHDRAW (Staff only)
-# -------------------------------------------------------
 @method_decorator([login_required, staff_required], name='dispatch')
 class TransactionView(View):
 
@@ -300,10 +259,6 @@ class TransactionView(View):
             "success": f"{ttype.capitalize()} of ₹{amount} successful. New balance: ₹{account.balance}"
         })
 
-
-# -------------------------------------------------------
-# TRANSFER (Staff only)
-# -------------------------------------------------------
 @method_decorator([login_required, staff_required], name='dispatch')
 class TransferView(View):
 
@@ -358,8 +313,6 @@ class TransferView(View):
         receiver.balance += amount
         sender.save()
         receiver.save()
-
-        # Debit record for sender
         Transaction.objects.create(
             account=sender,
             performed_by=request.user,
@@ -367,8 +320,6 @@ class TransferView(View):
             amount=amount,
             transaction_type='TRANSFER'
         )
-
-        # Credit record for receiver
         Transaction.objects.create(
             account=receiver,
             performed_by=request.user,
@@ -382,10 +333,6 @@ class TransferView(View):
             "success": f"₹{amount} transferred from {sender.cname} to {receiver.cname} successfully."
         })
 
-
-# -------------------------------------------------------
-# BALANCE VIEW
-# -------------------------------------------------------
 @method_decorator(login_required, name='dispatch')
 class BalanceView(View):
 
@@ -405,19 +352,13 @@ class BalanceView(View):
                 "accno": accno
             })
 
-        # Customer: only their own balance
         account = Account.objects.filter(user=request.user).first()
         return render(request, "balance.html", {"account": account})
 
-
-# -------------------------------------------------------
-# TRANSACTION HISTORY
-# -------------------------------------------------------
 @method_decorator(login_required, name='dispatch')
 class TransactionHistoryView(View):
 
     def get(self, request):
-        # Staff: can search any account's history
         if request.user.is_staff:
             accno = request.GET.get('accno', '').strip()
             transactions = []
@@ -439,7 +380,6 @@ class TransactionHistoryView(View):
                 "accno": accno
             })
 
-        # Customer: only their own history
         account = Account.objects.filter(user=request.user).first()
         transactions = Transaction.objects.filter(account=account).order_by('-timestamp') if account else []
 

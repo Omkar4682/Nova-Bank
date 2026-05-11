@@ -31,7 +31,7 @@
                         <input type="hidden" name="accno" value="{{ acc.accno }}">
                         <input type="hidden" name="action" value="approve">
                         <button class="btn-bank-primary" style="padding:6px 14px;font-size:12px;">
-                            ✅ Approve
+                             Approve
                         </button>
                     </form>
 
@@ -41,7 +41,7 @@
                         <input type="hidden" name="accno" value="{{ acc.accno }}">
                         <input type="hidden" name="action" value="reject">
                         <button class="btn-bank-secondary" style="padding:6px 14px;font-size:12px;background:#fee;border-color:#c0392b;color:#c0392b;">
-                            ❌ Reject
+                             Reject
                         </button>
                     </form>
                 </td>
@@ -49,7 +49,7 @@
             {% empty %}
             <tr>
                 <td colspan="5" style="text-align:center;padding:30px;color:#888;">
-                    🎉 No pending accounts. All accounts are reviewed!
+                     No pending accounts. All accounts are reviewed!
                 </td>
             </tr>
             {% endfor %}
