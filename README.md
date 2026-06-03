@@ -62,7 +62,7 @@ Installation
 
 Clone Repository
 
-git clone https://github.com/Omkar4682/YOUR-REPOSITORY-NAME.git
+git clone https://github.com/Omkar4682/Nova-Bank.git
 
 Move to Project Directory
 
