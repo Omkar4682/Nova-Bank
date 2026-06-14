@@ -107,15 +107,15 @@ http://127.0.0.1:8000/
 Screenshots
 
 Login Page
-<img width="1366" height="768" alt="Screenshot (57)" src="https://github.com/user-attachments/assets/11f3692f-5200-4fdf-a937-630c43d9fb2e" />
+
 Dashboard
-<img width="1366" height="768" alt="Screenshot (56)" src="https://github.com/user-attachments/assets/dec37aa7-5510-4f79-94cc-11d73f9e8fb8" />
+
 Transaction History
-<img width="1366" height="768" alt="Screenshot (58)" src="https://github.com/user-attachments/assets/d2bcdfd9-3530-42f0-898e-98bcbd97b47d" />
+
 Fund Transfer
-<img width="1366" height="768" alt="Screenshot (59)" src="https://github.com/user-attachments/assets/a5e3ac8a-5648-4e0f-9ee2-9ca532ba7dc6" />
+
 Admin Panel
-<img width="1366" height="768" alt="Screenshot (60)" src="https://github.com/user-attachments/assets/6a6c2367-642b-4976-a8e4-f55dbcce815a" />
+
 
 Future Improvements
 
