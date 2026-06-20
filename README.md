@@ -107,15 +107,15 @@ http://127.0.0.1:8000/
 Screenshots
 
 Login Page
-![Login Page](login.png)
+![Login Page](loginpage.png)
 Dashboard
-![Dashboard Page](Stsff Dashboard.png)
+![Dashboard Page](StaffDashboard.png)
 Transaction History
-![TransactionHistory Page](Transection History.png)
+![TransactionHistory Page](TransectionHistory.png)
 Fund Transfer
-![Fund TRansfer Page](Fund Transafer.png)
+![Fund TRansfer Page](FundTransafer.png)
 Admin Panel
-![Admin Page](Admin Dashboard.png)
+![Admin Page](AdminDashboard.png)
 
 
 Future Improvements
