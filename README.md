@@ -1,7 +1,7 @@
 Nova Banking Web Application
 
-A secure and role-based banking web application built using Django and MySQL that simulates core 
-banking operations such as account management, deposits, withdrawals, fund transfers, and transaction tracking.
+A secure and role-based banking web application built using Django and MySQL that simulates  
+banking operations such as account management, deposits, withdrawals, fund transfers, and transaction tracking ,Balance Checking.
 
 Live Demo
 https://novabanking.pythonanywhere.com/
