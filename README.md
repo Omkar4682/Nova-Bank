@@ -129,7 +129,7 @@ Pagination
 Advanced Analytics Dashboard
 
 Author
-Omkar Pandharinath Date
+Date Omkar Pandharinath
 GitHub:https://github.com/Omkar4682?
 LinkedIn:https://linkedin.com/in/omkar-date-04969435b
 
