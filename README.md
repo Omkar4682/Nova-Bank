@@ -12,9 +12,9 @@ Features
 
 Authentication & Authorization
 Role-Based Login System (Admin, Staff, User)
-Secure Session Authentication
+Secure Session  Based Authentication
 Password Hashing using Django Authentication System
-Login Required Access Control
+Login Required Access Control Decorators
 CSRF Protection
 Banking Operations
 Account Creation and Management
