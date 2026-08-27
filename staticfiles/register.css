@@ -100,12 +100,22 @@ body {
 
 /* ERROR BOX */
 .bank-alert-danger {
+  background: transparent;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bank-alert-danger .error-item {
   background: #FCEBEB;
   color: #A32D2D;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 6px;
-  margin-top: 10px;
+  border-left: 4px solid #A32D2D;
   font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 /* ANIMATION */
