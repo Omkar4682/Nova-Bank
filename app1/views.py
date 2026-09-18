@@ -145,7 +145,7 @@ class ApproveAccountView(View):
 
     def post(self, request):
         accno = request.POST.get('accno')
-        action = request.POST.get('action')  # 'approve' or 'reject'
+        action = request.POST.get('action')  # 'approve' or 'reject' the Account creation request
 
         try:
             account = Account.objects.get(accno=accno)
